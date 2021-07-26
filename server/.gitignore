@@ -1,0 +1,15 @@
+# depedencies
+
+node_modules
+
+# productiom
+
+build/
+
+# environment variables
+
+.env
+
+# npm logs
+
+npm-debug.log*
