@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { fetchData } from "../api";
 
 interface State<Data> {
@@ -38,11 +38,6 @@ function reducer<Data>() {
 export function useMutation<Data = any, Variables = any>(
     query: string
 ): MutationTupe<Data, Variables> {
-    const [apiData, setApiData] = useState<State<Data>>({
-        data: null,
-        loading: false,
-        error: null,
-    });
     const fetchReducer = reducer<Data>();
     const [state, dispatch] = useReducer(fetchReducer, {
         data: null,

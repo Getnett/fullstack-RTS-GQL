@@ -1,45 +1,43 @@
-import { useMutation, useQuery } from "../../app/hooks";
-import { DeleteListing, IVariables, ListingData } from "./types";
-
-const LISTINGS = `
-  query Listings{
-      listings{
-        id
-        title
-        image
-        address
-        price
-        numOfGuests
-        numOfBeds
-        numOfBaths
-        rating
-      }
-  }
-
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { Listing as ListingData } from "./__generated__/Listing";
+import {
+    DeleteListing,
+    DeleteListingVariables,
+} from "./__generated__/DeleteListing";
+const LISTINGS = gql`
+    query Listing {
+        listings {
+            id
+            title
+            image
+            address
+            price
+            numOfGuests
+            numOfBeds
+            numOfBaths
+            rating
+        }
+    }
 `;
 
-const DELETE_LISTINGS = `
-  mutation DeleteListing($id:ID!){
-          deleteListing(id:$id){
-              id
-              title
-          }
-  }    
-
+const DELETE_LISTINGS = gql`
+    mutation DeleteListing($id: ID!) {
+        deleteListing(id: $id) {
+            id
+            title
+        }
+    }
 `;
 
-export const Listings: React.FC = function () {
-    // experimental
-
+export const ListingsComp: React.FC = function () {
     const { data, loading, error, refetch } = useQuery<ListingData>(LISTINGS);
     const [fetch, { loading: mutLoading, error: mutError }] = useMutation<
         DeleteListing,
-        IVariables
+        DeleteListingVariables
     >(DELETE_LISTINGS);
-    console.log("[MUT--ERROR]", mutError);
 
     async function handleDeleteListingData(id: string) {
-        await fetch({ id });
+        await fetch({ variables: { id } });
         refetch();
     }
 
