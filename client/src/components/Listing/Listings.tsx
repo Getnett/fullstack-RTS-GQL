@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { fetchData } from "../../app/api";
-import { useQuery } from "../../app/hooks";
-import { DeleteListing, Listing, ListingData } from "./types";
+import { useMutation, useQuery } from "../../app/hooks";
+import { DeleteListing, IVariables, ListingData } from "./types";
 
 const LISTINGS = `
   query Listings{
@@ -31,15 +29,17 @@ const DELETE_LISTINGS = `
 `;
 
 export const Listings: React.FC = function () {
-    const { data, refetch } = useQuery<ListingData>(LISTINGS);
+    // experimental
 
-    console.log(data);
+    const { data, loading, error, refetch } = useQuery<ListingData>(LISTINGS);
+    const [fetch, { loading: mutLoading, error: mutError }] = useMutation<
+        DeleteListing,
+        IVariables
+    >(DELETE_LISTINGS);
+    console.log("[MUT--ERROR]", mutError);
 
     async function handleDeleteListingData(id: string) {
-        await fetchData<DeleteListing>({
-            query: DELETE_LISTINGS,
-            variables: { id },
-        });
+        await fetch({ id });
         refetch();
     }
 
@@ -48,18 +48,31 @@ export const Listings: React.FC = function () {
             {data?.listings.map((list) => (
                 <div style={{ display: "flex" }} key={list.id}>
                     <li>{list.title}</li>
-                    <button onClick={() => handleDeleteListingData(list.id)}>
-                        delete
+                    <button
+                        name={`${list.id}`}
+                        id={`${list.id}`}
+                        onClick={() => handleDeleteListingData(list.id)}
+                    >
+                        {mutLoading ? "deleting..." : "Delete"}
                     </button>
                 </div>
             ))}
         </ul>
     );
 
+    if (loading) {
+        return <h3>Loading...</h3>;
+    }
+
+    if (error) {
+        return <h3>{error}</h3>;
+    }
+    const deleteErrorMessage = mutError ? <h3>Deleting failed</h3> : null;
     return (
         <>
             <h3>Listings</h3>
             {listOfListings}
+            {deleteErrorMessage}
         </>
     );
 };
