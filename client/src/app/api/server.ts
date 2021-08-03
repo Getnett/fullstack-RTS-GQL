@@ -17,6 +17,8 @@ export async function fetchData<Data = any, Variables = any>(
     });
 
     if (!res.ok) {
+        console.log("error here");
+
         throw new Error(res.statusText);
     }
 

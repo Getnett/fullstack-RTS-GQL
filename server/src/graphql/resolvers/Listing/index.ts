@@ -18,7 +18,7 @@ export const ListingResolvers: IResolvers = {
             { id }: { id: string },
             { dbCollection }: { dbCollection: IDBCollection }
         ): Promise<Listing> => {
-            // throw new Error("New error occured");
+            // throw new Error("Request failed !");
             const deletedItem = await dbCollection.listings.findOneAndDelete({
                 _id: new ObjectId(id),
             });

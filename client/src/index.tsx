@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 
-import { ListingsComp } from "./components/";
+import { ListingsComp } from "./views";
 import reportWebVitals from "./reportWebVitals";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-
+import "antd/dist/antd.css";
+import "./index.css";
 const client = new ApolloClient({
     uri: "/graphql",
     cache: new InMemoryCache(),
